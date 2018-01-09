@@ -6,7 +6,15 @@ class StatusController < ApplicationController
 
   def status
 
-
+    # Ensure the status is an actual status code
+    # Status Codes
+    # https://stackoverflow.com/questions/8890351/return-a-specific-http-status-code-in-rails
+    if Rack::Utils::HTTP_STATUS_CODES[request.path_parameters[:status].to_i].nil?
+      render json: {
+          "error": "Please set a status code as the path. Example: /status/200"
+      }, status: 400
+      return
+    end
 
     # json in rails:
     # https://stackoverflow.com/questions/3183786/how-to-convert-a-ruby-hash-object-to-json
