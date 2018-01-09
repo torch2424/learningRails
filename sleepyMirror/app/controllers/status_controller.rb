@@ -11,7 +11,7 @@ class StatusController < ApplicationController
     # https://stackoverflow.com/questions/8890351/return-a-specific-http-status-code-in-rails
     if Rack::Utils::HTTP_STATUS_CODES[request.path_parameters[:status].to_i].nil?
       render json: {
-          "error": "Please pass a proper status code as the path. Example: /status/200"
+          "error": "Please pass a proper status code as the path. Example: /status/200",
           "statuscodes": "http://billpatrianakos.me/blog/2013/10/13/list-of-rails-status-code-symbols/"
       }, status: 400
       return
@@ -26,7 +26,10 @@ class StatusController < ApplicationController
     response[:status] = request.path_parameters[:status]
 
     request.query_parameters.each do |key,value|
-      Rails.logger.debug "Param #{key}: #{value}"
+      response[key] = value
+    end
+
+    request.request_parameters.each do |key,value|
       response[key] = value
     end
 
